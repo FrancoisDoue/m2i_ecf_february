@@ -7,6 +7,9 @@
     body{
         @apply h-full w-full
     }
+    #app{
+        @apply h-full w-full
+    }
     
     h1{
         @apply text-6xl
@@ -25,6 +28,10 @@
     }
     h6{
         @apply text-xl
+    }
+
+    .link{
+        @apply hover:underline transition duration-100
     }
 }
 

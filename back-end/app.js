@@ -1,11 +1,13 @@
 import env from "./config/env.js"
 import express from "express";
+import cors from "cors"
 import router from "./src/routes/defaultRouter.js";
 import db from "./config/db.js";
 
 const app = express();
 
 app
+    .use(cors())
     .use(express.json())
     .use(router)
 

@@ -3,7 +3,10 @@ console.log('On home view')
 </script>
 
 <template>
-    <h3>This is the home view</h3>
+    <div>
+        <h3>This is the home view</h3>
+
+    </div>
 
 </template>
 

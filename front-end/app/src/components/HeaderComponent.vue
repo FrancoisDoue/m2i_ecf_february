@@ -1,14 +1,16 @@
 <script setup>
+import { RouterLink } from 'vue-router';
 
 </script>
 
 <template>
 <header id="header-nav">
     <div>
-        <a href="#">test link</a>
+        <div></div>
         <nav>
             <ul>
-test
+                <li><RouterLink class="link" to="/connexion">Connexion</RouterLink></li>
+                <li><RouterLink class="link" to="/inscription">Inscription</RouterLink></li>
             </ul>
         </nav>
     </div>
@@ -20,10 +22,19 @@ test
 
 #header-nav {
     @apply border-gray-200 bg-gray-50;
-    & div{
-        @apply flex flex-wrap items-center justify-between mx-auto p-4;
 
-    }
+}
+#header-nav > div{
+    @apply flex flex-wrap items-center justify-between mx-auto p-4;
+}
+nav{
+    @apply w-1/5 flex justify-end mx-10;
+}
+ul{
+    @apply w-full flex justify-around;
+}
+li{
+    @apply m-auto
 }
 
 
