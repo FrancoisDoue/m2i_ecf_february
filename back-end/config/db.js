@@ -13,10 +13,10 @@ const Task = taskModel(sequelize);
 const Project = projectModel(sequelize);
 const User = userModel(sequelize);
 
-User.hasMany(Project, {onDelete: 'CASCADE'});
+User.hasMany(Project, {onDelete: 'CASCADE', onUpdate: 'RESTRICT'});
 Project.User = Project.belongsTo(User);
 
-Project.hasMany(Task, {onDelete: 'CASCADE'});
+Project.hasMany(Task, {onDelete: 'CASCADE', onUpdate: 'RESTRICT'});
 Task.Project = Task.belongsTo(Project)
 
 sequelize

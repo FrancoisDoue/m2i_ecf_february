@@ -1,7 +1,6 @@
 import db from "../config/db.js";
 import { hashSync } from "bcrypt";
 import {faker} from "@faker-js/faker"
-import env from "../config/env.js";
 
 const adminAccount = {login: "admin", password: hashSync("admin", 10)};
 const userAccount = {login: "user", password: hashSync("user", 10)};
@@ -15,7 +14,7 @@ const randomIntInRange = (min, max) => {
 }
 const randomProjectList = () => {
     const projectList = []
-    for(let i = 0; i < randomIntInRange(2, 6); i++) {
+    for(let i = 0; i < randomIntInRange(2, 8); i++) {
         projectList.push({
             title: `${bullshit.productAdjective()} ${bullshit.productName()}`,
             description: bullshit.productDescription()
@@ -37,18 +36,26 @@ const randomTaskList = () => {
     return taskList
 }
 
+const addFixtureElement = async(parentId, list, key, Table) => {
+    list.forEach(async (element, i) =>{
+        element[key] = parentId
+        list[i] = (await Table.create(element)).dataValues
+        list[i] = addFixtureElement(list[i].id, randomTaskList(), 'ProjectId', db.Task)
+        
+    })
+    return list
+}
+
 
 const runFixtures = async () => {
-    const admininfo = (await db.User.create(adminAccount)).dataValues
-    const userinfo = (await db.User.create(userAccount)).dataValues
+    const admin = (await db.User.create(adminAccount)).dataValues
+    const user = (await db.User.create(userAccount)).dataValues
 
-    console.log(admininfo);
-    console.log(userinfo);
-
-    randomProjectList().forEach((element) => {
-
-    })
+    await addFixtureElement(admin.id, randomProjectList(), 'UserId', db.Project)
+    await addFixtureElement(user.id, randomProjectList(), 'UserId', db.Project)
 }
+
+// there are an issue but it's work already. I'll try to fix it later
 
 (async() => {
     await db.sequelize.sync({force: true})
