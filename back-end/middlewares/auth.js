@@ -24,12 +24,19 @@ export const comparePassword = async (req, res, next) => {
 
 export const tokenEncode = (req, _res, next) => {
     req.auth = jwt.sign(
-        {user: {
-            id: req.auth.id,
-            role: req.auth.role
-        }},
+        { id: req.auth.id },
         process.env.JWT_SECRET,
         { expiresIn: "1d" }
     )
     return next()
+}
+
+export const tokenVerify = (req, res, next) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1]
+        req.userId = jwt.verify(token, process.env.JWT_SECRET).id
+        return next()
+    } catch (e) {
+        res.status(401).json({ message: "You must be connected to access this route" });
+    }
 }

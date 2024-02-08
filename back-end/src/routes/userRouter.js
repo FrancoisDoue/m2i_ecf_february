@@ -4,7 +4,7 @@ import { comparePassword, hashPassword, tokenEncode } from "../../middlewares/au
 
 const userRouter = Router()
 
-userRouter.post('/register', [hashPassword],userController.register)
+userRouter.post('/register', hashPassword, userController.register)
 userRouter.post('/login', [comparePassword, tokenEncode], userController.login)
 
 export default userRouter
