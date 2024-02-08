@@ -14,7 +14,10 @@ const Project = projectModel(sequelize);
 const User = userModel(sequelize);
 
 User.hasMany(Project, {onDelete: 'CASCADE'});
+Project.User = Project.belongsTo(User);
+
 Project.hasMany(Task, {onDelete: 'CASCADE'});
+Task.Project = Task.belongsTo(Project)
 
 sequelize
     .sync({force: +env.SEQUELIZE_SYNC})
@@ -22,3 +25,8 @@ sequelize
     .catch((err) => console.error('Synchronization error : ', err.message));
 
 export default { sequelize, Task, Project, User }
+
+
+// We save the return values of the association setup calls to use them later
+// Product.User = Product.belongsTo(User);
+// User.Addresses = User.hasMany(Address);
