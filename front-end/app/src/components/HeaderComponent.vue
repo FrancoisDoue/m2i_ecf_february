@@ -1,5 +1,9 @@
 <script setup>
 import { RouterLink } from 'vue-router';
+import { useAuthStore } from '../store/authStore.js';
+import { ref } from 'vue';
+
+const {isLoggedIn, logOut} = useAuthStore()
 
 </script>
 
@@ -7,10 +11,15 @@ import { RouterLink } from 'vue-router';
 <header id="header-nav">
     <div>
         <div></div>
-        <nav>
-            <ul>
+        <nav v-if="!isLoggedIn">
+            <ul >
                 <li><RouterLink class="link" to="/connexion">Connexion</RouterLink></li>
                 <li><RouterLink class="link" to="/inscription">Inscription</RouterLink></li>
+            </ul>
+        </nav>
+        <nav v-else>
+            <ul >
+                <li><a class="disconnect-btn" @click="logOut"> Deconnexion </a></li>
             </ul>
         </nav>
     </div>
@@ -35,6 +44,9 @@ ul{
 }
 li{
     @apply m-auto
+}
+.disconnect-btn{
+    @apply border border-red-600 hover:bg-red-600 hover:text-white font-semibold py-2 px-4 rounded outline-1 outline-black
 }
 
 

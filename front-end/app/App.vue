@@ -4,6 +4,8 @@ import HeaderComponent from './src/components/HeaderComponent.vue';
 import { useAuthStore } from './src/store/authStore.js'
 
 const authStore = useAuthStore()
+console.log(authStore.isLoggedIn)
+console.log(authStore.token)
 
 // console.log(authStore.token)
 
@@ -23,7 +25,7 @@ const authStore = useAuthStore()
   @apply min-h-full w-full flex flex-col
 }
 #view {
-  @apply grow mx-20 mt-5
+  @apply grow px-36
 }
 
 </style>

@@ -12,7 +12,7 @@ const password = ref("")
 const register = async () => {
     try{
         const newUser = await api.post(
-            '/user/register', 
+            '/user/register',
             {login: login.value, password: password.value}
         )
         if (newUser?.status === 201) router.push('/connexion')

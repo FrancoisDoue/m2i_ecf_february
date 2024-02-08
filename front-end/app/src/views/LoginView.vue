@@ -1,12 +1,14 @@
 <script setup>
 import { ref } from 'vue';
 import api from '../services/apiService.js';
-import { authenticate } from '../services/authService';
+import { useAuthStore } from '../store/authStore';
+import { useRouter } from 'vue-router';
 
+const router = useRouter()
+const authStore = useAuthStore()
 
 const login = ref("")
 const password = ref("")
-
 const errorText = ref("")
 
 const errorHandler = (bool) => {
@@ -21,17 +23,13 @@ const errorHandler = (bool) => {
 console.log(errorText.value)
 
 const signin = async () => {
-    authenticate({login: login.value, password: password.value})
-    // try {
-    //     // const connexion =  await api.post(
-    //     //     '/user/login', 
-    //     //     {login: login.value, password: password.value}
-    //     // )
-    //     // console.log('log',connexion)
-    // } catch (error) {
-    //     // errorHandler(true)
-    //     // console.log(error.response)
-    // }
+    try {
+        const res = await api.post('/user/login', {login: login.value, password: password.value})
+        authStore.login(JSON.stringify(res.data.token))
+        if (authStore.isLoggedIn) router.push('/projets')
+    } catch (error) {
+        errorHandler(true)
+    }
 }
 
 </script>
