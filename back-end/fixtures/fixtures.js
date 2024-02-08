@@ -8,13 +8,11 @@ const userAccount = {login: "user", password: hashSync("user", 10)};
 const bullshit = faker.commerce
 const superBullshit = faker.company
 
-const randomIntInRange = (min, max) => {
-    min = Math.ceil(min)
-    return Math.floor(Math.random() * (max - min) + min)
-}
+const randomIntInRange = (min, max) => Math.floor(Math.random() * (max - min) + min)
+
 const randomProjectList = () => {
     const projectList = []
-    for(let i = 0; i < randomIntInRange(2, 8); i++) {
+    for(let i = 0; i < randomIntInRange(3, 10); i++) {
         projectList.push({
             title: `${bullshit.productAdjective()} ${bullshit.productName()}`,
             description: bullshit.productDescription()
@@ -25,22 +23,23 @@ const randomProjectList = () => {
 
 const randomTaskList = () => {
     const taskList = []
-    for(let i = 0; i < randomIntInRange(0, 15); i++) {
+    for(let i = 0; i < randomIntInRange(1, 15); i++) {
         taskList.push({
             title: superBullshit.buzzPhrase(),
             description: bullshit.productDescription(),
             priority: randomIntInRange(0, 2),
-            process: (Math.random() >= .5) ? 0 : randomIntInRange(1,2)
+            progress: (Math.random() >= .5) ? 0 : randomIntInRange(1,2)
         })
     }
     return taskList
 }
 
-const addFixtureElement = async(parentId, list, key, Table) => {
-    list.forEach(async (element, i) =>{
+const addFixtureElements = async(parentId, list, key, Table, rec = true) => {
+    list.forEach( async (element, i) => {
         element[key] = parentId
         list[i] = (await Table.create(element)).dataValues
-        list[i] = addFixtureElement(list[i].id, randomTaskList(), 'ProjectId', db.Task)
+        if(rec)
+            list[i] = addFixtureElements(list[i].id, randomTaskList(), 'ProjectId', db.Task, false)
         
     })
     return list
@@ -51,11 +50,9 @@ const runFixtures = async () => {
     const admin = (await db.User.create(adminAccount)).dataValues
     const user = (await db.User.create(userAccount)).dataValues
 
-    await addFixtureElement(admin.id, randomProjectList(), 'UserId', db.Project)
-    await addFixtureElement(user.id, randomProjectList(), 'UserId', db.Project)
+    addFixtureElements(admin.id, randomProjectList(), 'UserId', db.Project)
+    addFixtureElements(user.id, randomProjectList(), 'UserId', db.Project)
 }
-
-// there are an issue but it's work already. I'll try to fix it later
 
 (async() => {
     await db.sequelize.sync({force: true})

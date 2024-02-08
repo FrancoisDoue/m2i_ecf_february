@@ -1,61 +1,122 @@
+import db from "../../config/db.js"
+
 export default {
 
-    getAllProject: (req, res) => {
-        res.json({message: "get all projects", urId: req.userId})
+    getAllProject: async(req, res) => {
+        try {
+            const datas = await db.Project.findAndCountAll({
+                where: {UserId: req.userId}
+            })
+            if (datas) return res.json(datas)
+            return res.status(404).json({message: 'Not Found'})
+        } catch (error) {
+            res.status(500).json()
+        }
     },
 
-    addProject: (req, res) => {
-        res.json({message: "add a project", urId: req.userId})
+    addProject: async(req, res) => {
+        try {
+            req.body.UserId = req.userId
+            const datas = await db.Project.create(req.body)
+            res.status(201).json(datas.dataValues)
+        }catch(e){
+            res.status(500).json()
+        }
     },
 
-    getProject : (req, res) => {
-        res.json({
-            message: "get a project with details", 
-            urId: req.userId, 
-            projectId: +req.params.projectId
-        })
+    getProject : async (req, res) => {
+        try {
+            const datas = await db.Project.findOne({
+                include : db.Task,
+                count: db.Task,
+                where: {
+                    id: req.params.projectId, 
+                    UserId: req.userId
+                }
+            })
+            if (datas) return res.json(datas)
+            return res.status(404).json({message: 'Not Found'})
+        } catch (error) {
+            res.status(500).json()
+        }
     },
 
-    updateProject : (req, res) => {
-        res.json({
-            message: "modify a project", 
-            urId: req.userId, 
-            projectId: +req.params.projectId
-        })
+    updateProject : async(req, res) => {
+        try{
+            const datas = await db.Project.update(req.body, {
+                where: {
+                    id : req.params.projectId,
+                    UserId: req.userId
+                }
+            })
+            if(datas) return res.status(201).json()
+            return res.status(404).json()
+        }catch (e) {
+            return res.status(500).json()
+        }
     },
 
-    deleteProject : (req, res) => {
-        res.json({
-            message: "delete a project", 
-            urId: req.userId, 
-            projectId: +req.params.projectId
-        })
+    deleteProject : async(req, res) => {
+        try {
+            const datas = await db.Project.destroy({
+                where: {
+                    id: req.params.projectId, 
+                    UserId: req.userId
+                }
+            })
+            if (datas) return res.status(204).end()
+            return res.status(404).json({message: "This project does not exist"})
+        } catch (error) {
+            res.status(500).json()
+        }
     },
 
-    addTask : (req, res) => {
-        res.json({
-            message: "add a task", 
-            urId: req.userId, 
-            projectId: +req.params.projectId
-        })
+    addTask : async(req, res) => {
+        try{
+            req.body.ProjectId = req.params.projectId
+            const datas = await db.Task.create(req.body)
+            return res.status(201).json(datas.dataValues)
+        }catch (e) {
+            return res.status(500).json()
+        }
     },
 
-    updateTask : (req, res) => {
-        res.json({
-            message: "modify a task", 
-            urId: req.userId, 
-            projectId: +req.params.projectId,
-            taskId: +req.params.taskId
-        })
+    updateTask : async(req, res) => {
+        try{
+            const isOwner = (await db.Project.findOne({
+                where: {UserId: req.userId, id: req.params.projectId}
+            })).id
+            const datas = await db.Task.update(req.body, {
+                include: db.Project,
+                where: {
+                    id : req.params.taskId,
+                    ProjectId: isOwner
+                }
+            })
+            if(datas[0]) return res.status(201).json()
+            return res.status(404).json()
+        }catch (e) {
+            return res.status(500).json(e)
+        }
     },
 
-    deleteTask : (req, res) => {
-        res.json({
-            message: "delete a task", 
-            urId: req.userId, 
-            projectId: +req.params.projectId,
-            taskId: +req.params.taskId
-        })
+    deleteTask : async(req, res) => {
+        try {
+            const isOwner = (await db.Project.findOne({
+                where: {UserId: req.userId, id: req.params.projectId}
+            })).id
+            const datas = await db.Task.destroy({
+                where: {
+                    id : req.params.taskId,
+                    ProjectId: isOwner
+                }
+            })
+            if(datas) return res.status(204).json()
+            return res.status(404).json()
+        } catch (error) {
+            return res.status(500).json()
+            
+        }
     }
 
 }

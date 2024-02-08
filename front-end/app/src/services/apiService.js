@@ -2,14 +2,16 @@ import axios from "axios"
 
 const api = axios.create({baseURL: "http://localhost:3000"})
 
-
-// const responseHandler = async (request) => {
-//     try {
-//         const response = await request
-//         return response.data
-//     } catch (e){
-//         return {error: true, code: e.response.status, message: e.response.data.error}
-//     }
-// }
+api.interceptors.request.use((config) => {
+    console.log('config', config)
+    return config
+})
+api.interceptors.response.use(
+    (res) => {
+        console.log('response', res)
+        return res
+    },
+    (err) => Promise.reject(err)
+)
 
 export default api

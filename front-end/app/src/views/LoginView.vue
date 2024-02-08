@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue';
 import api from '../services/apiService.js';
+import { authenticate } from '../services/authService';
 
 
 const login = ref("")
@@ -20,16 +21,17 @@ const errorHandler = (bool) => {
 console.log(errorText.value)
 
 const signin = async () => {
-    try {
-        const connexion =  await api.post(
-            '/user/login', 
-            {login: login.value, password: password.value}
-        )
-        console.log('log',connexion)
-    } catch (error) {
-        errorHandler(true)
-        console.log(error.response)
-    }
+    authenticate({login: login.value, password: password.value})
+    // try {
+    //     // const connexion =  await api.post(
+    //     //     '/user/login', 
+    //     //     {login: login.value, password: password.value}
+    //     // )
+    //     // console.log('log',connexion)
+    // } catch (error) {
+    //     // errorHandler(true)
+    //     // console.log(error.response)
+    // }
 }
 
 </script>
