@@ -4,8 +4,8 @@ import HeaderComponent from './src/components/HeaderComponent.vue';
 import { useAuthStore } from './src/store/authStore.js'
 
 const authStore = useAuthStore()
-console.log(authStore.isLoggedIn)
-console.log(authStore.token)
+// console.log(authStore.isLoggedIn())
+// console.log(authStore.token)
 
 // console.log(authStore.token)
 
