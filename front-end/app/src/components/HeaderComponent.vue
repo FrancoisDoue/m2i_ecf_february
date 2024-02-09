@@ -1,9 +1,14 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import { useAuthStore } from '../store/authStore.js';
-import { ref } from 'vue';
+import { inject, ref } from 'vue';
+
+const isLogged = inject('loginState').stateOfLogin
 
 const {isLoggedIn, logOut} = useAuthStore()
+
+// const isLogged = ref(isLoggedIn)
+// console.log(isLogged.value)
 
 </script>
 
@@ -11,7 +16,7 @@ const {isLoggedIn, logOut} = useAuthStore()
 <header id="header-nav">
     <div>
         <div></div>
-        <nav v-if="!isLoggedIn">
+        <nav v-if="!isLogged()">
             <ul >
                 <li><RouterLink class="link" to="/connexion">Connexion</RouterLink></li>
                 <li><RouterLink class="link" to="/inscription">Inscription</RouterLink></li>

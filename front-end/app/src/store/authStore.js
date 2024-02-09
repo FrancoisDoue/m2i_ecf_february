@@ -1,47 +1,29 @@
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
-import { computed, ref } from 'vue'
+import { computed ,ref } from 'vue'
+import { useProjectStore } from './projectStore'
+
 
 export const useAuthStore = defineStore("auth", () => {
-    const token = ref(localStorage.getItem('userToken'))
+    const { unsetProjectList } = useProjectStore()
 
-    let isLoggedIn = () => computed(token)
+    const router = useRouter()
+
+    const token = ref(JSON.parse(localStorage.getItem('userToken')) || '')
+
+    let isLoggedIn = computed(() => !!token.value)
 
     const login = (auth) => {
-        localStorage.setItem('userToken', auth)
-        token.value = localStorage.getItem('userToken')
+        localStorage.setItem('userToken', JSON.stringify(auth))
+        token.value = auth
+        console.log(isLoggedIn)
     }
     const logOut = () => {
         token.value = null
         localStorage.removeItem('userToken')
+        unsetProjectList()
+        router.push('/connexion')
     }
 
     return { token, isLoggedIn, login, logOut }
-})
-
-// export const useAuthStore = defineStore({
-//     id:'auth',
-
-//     state: () => ({
-//         token: JSON.parse(localStorage.getItem('userToken')),
-//         returnUrl: null
-//     }),
-//     actions: {
-//         isLoggedIn: () => {
-//             console.log(this.token)
-//             return !!this.token
-//         },
-//         login: (auth) => {
-//             console.log(auth)
-//             localStorage.setItem('userToken', JSON.stringify(auth))
-//             this.state.token = auth
-//             console.log(this.state.token)
-//             useRouter().push('/project')
-//         },
-//         logOut: () => {
-//             this.token = null
-//             localStorage.removeItem('userToken')
-//         }
-//     }
-
 })
