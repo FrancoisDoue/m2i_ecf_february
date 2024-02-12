@@ -12,21 +12,19 @@ const tasks = ref(null)
 const project = ref({})
 
 
-// if(!projectList)
 const projectId = +route.params.projectId
-// console.log(projectId)
-// console.log(project)
 
 
 
 onBeforeMount(async () => {
     if(!projectList.length) await setProjectList(token)
     project.value = projectWithId(projectId)
+    // if(project.value?.Tasks.length){
+    //     tasks.value = project.value.Tasks
+    // }
     tasks.value = await setTasksToProject(projectId, token).tasks
     console.log(project, tasks)
 
-
-    // await setProjectList(token)
 })
 </script>
 

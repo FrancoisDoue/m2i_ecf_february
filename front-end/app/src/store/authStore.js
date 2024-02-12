@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import { computed ,ref } from 'vue'
 import { useProjectStore } from './projectStore'
+import { jwtDecode } from 'jwt-decode'
 
 
 export const useAuthStore = defineStore("auth", () => {
@@ -9,9 +10,14 @@ export const useAuthStore = defineStore("auth", () => {
 
     const router = useRouter()
 
+    const isValidToken = (token) => {
+        const decode = jwtDecode(token)
+        return decode.exp > new Date().getTime()/1000
+    }
+
     const token = ref(JSON.parse(localStorage.getItem('userToken')) || '')
 
-    let isLoggedIn = computed(() => !!token.value)
+    let isLoggedIn = computed(() => !!token.value && isValidToken(token.value))
 
     const login = (auth) => {
         localStorage.setItem('userToken', JSON.stringify(auth))
@@ -25,5 +31,5 @@ export const useAuthStore = defineStore("auth", () => {
         router.push('/connexion')
     }
 
-    return { token, isLoggedIn, login, logOut }
+    return { token, isLoggedIn, login, logOut, isValidToken }
 })
