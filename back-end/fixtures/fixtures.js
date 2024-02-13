@@ -1,6 +1,6 @@
 import db from "../config/db.js";
 import { hashSync } from "bcrypt";
-import {faker} from "@faker-js/faker"
+import { faker } from "@faker-js/faker"
 
 const adminAccount = {login: "admin", password: hashSync("admin", 10)};
 const userAccount = {login: "user", password: hashSync("user", 10)};
