@@ -1,6 +1,30 @@
 .submit-btn {
-    @apply text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded px-10 py-2.5 m-auto
+    @apply 
+    text-white 
+    font-medium 
+    rounded 
+    bg-blue-500 
+    px-10 
+    py-2.5 
+    m-auto 
+    focus:ring-4 
+    focus:ring-blue-300 
+    hover:bg-blue-700 
+    hover:cursor-pointer;
 }
 .back-btn {
-    @apply text-white text-sm flex flex-row-reverse bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium rounded px-10 py-2.5 m-auto
+    @apply 
+    text-white 
+    text-sm 
+    font-medium 
+    rounded 
+    flex 
+    flex-row-reverse 
+    bg-blue-500 
+    px-4 
+    py-1
+    focus:ring-4 
+    focus:ring-blue-300 
+    hover:bg-blue-700 
+    hover:cursor-pointer;
 }

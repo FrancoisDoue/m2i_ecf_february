@@ -20,6 +20,7 @@ api.interceptors.response.use(
             code: err.code, 
             config: err.config
         })
+        return err
     }
 
 )

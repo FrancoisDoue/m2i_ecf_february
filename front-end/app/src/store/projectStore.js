@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { computed, reactive, ref } from "vue";
+import { ref } from "vue";
 import api from "../services/apiService";
 
 
@@ -7,7 +7,10 @@ export const useProjectStore = defineStore('project', () => {
 
     const projectList = ref([])
 
-    const projectWithId = (id) => projectList.value.find(p => p.id == id)
+    const projectWithId = (id) => {
+        if(projectList.value.length) return projectList.value.find(p => p.id == id)
+        return {}
+    }
 
     const setProjectList = async (jwt) => {
         if(!projectList.value.length)
@@ -36,7 +39,7 @@ export const useProjectStore = defineStore('project', () => {
             console.log(projectList.value)
             return datas.data
         } catch (error) {
-            
+            return error
         }
     }
 

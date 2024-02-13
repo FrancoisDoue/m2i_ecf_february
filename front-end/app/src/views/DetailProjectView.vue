@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, onMounted, ref } from 'vue';
+import { onBeforeMount, onBeforeUnmount, ref } from 'vue';
 import { useAuthStore } from '../store/authStore';
 import { useRoute, RouterLink } from 'vue-router';
 import { useProjectStore } from '../store/projectStore';
@@ -7,34 +7,26 @@ import { useProjectStore } from '../store/projectStore';
 const { projectList, setProjectList, setTasksToProject, projectWithId } = useProjectStore()
 const { token } = useAuthStore()
 const route = useRoute()
+const projectId = +route.params.projectId
 
 const project = ref({})
 
-const defaultTask = ref([])
-const currentTask = ref([])
-const doneTask = ref([])
-
-
-const projectId = +route.params.projectId
+// onBeforeUnmount(() => console.log('unmount!'))
 
 onBeforeMount(async () => {
-    if(!projectList.length) await setProjectList(token)
-    if(!projectList.Tasks) await setTasksToProject(projectId, token)
-    project.value = projectWithId(projectId)
-    console.log(project.value)
+        if(!projectList.length) await setProjectList(token)
+        if(!projectWithId(projectId).Tasks) await setTasksToProject(projectId, token)
+        project.value = projectWithId(projectId)
+    // console.log(project.value)
 })
-// onMounted(() => {
-//     defaultTask.value = project.value.Tasks.filter(e => e.progress === 0)
-//     currentTask.value = project.value.Tasks.filter(e => e.progress === 1)
-//     doneTask.value = project.value.Tasks.filter(e => e.progress === 2)
-// })
+
 </script>
 
 <template>
     <div>
         <div>
             <div class="mini-nav">
-                <h5>Bienvenue sur votre projet :</h5>
+                <h5>Votre projet :</h5>
                 <RouterLink to="/projets" class="back-btn">
                     Retour à vos projets
                     <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -46,9 +38,14 @@ onBeforeMount(async () => {
             <hr>
         </div>
         <div class="tasks-bearer">
-            <div id="default-task"></div>
-            <div id="current-task"></div>
-            <div id="done-task">hey!</div>
+            <template v-if="project.Tasks">
+                <div v-for="i in 3" >
+                    <p v-for="task in project?.Tasks.filter(t => t.progress === i-1)">{{ task.title }}</p>
+                </div>
+            </template>
+            <div v-else>
+                <p>Il n'y a pas de tâches pour ce projet</p>
+            </div>
 
         </div>
     </div>
@@ -59,15 +56,14 @@ onBeforeMount(async () => {
 h3{
     @apply text-center ml-96 my-10;
 }
-h5{
-    @apply block
-}
 .mini-nav {
-    @apply flex justify-between items-center
+    @apply w-full flex justify-around items-center;
 }
 .tasks-bearer{
-    @apply flex flex-row min-h-full
+    @apply flex flex-row min-h-full pt-2;
+    div {
+        @apply w-1/3
+    }
 }
-
 
 </style>
