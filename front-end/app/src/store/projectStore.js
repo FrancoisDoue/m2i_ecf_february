@@ -17,27 +17,22 @@ export const useProjectStore = defineStore('project', () => {
                     Authorization: `Bearer ${jwt}`
                 }})
                 return projectList.value.push(...datas.data.rows)
-            } catch (error) {
-                // console.log(error)
+            } catch (e) {
+                return projectList.value = []
             }
     }
 
     const setTasksToProject = async (id, jwt) => {
         try {
             const datas = await api.get(`/project/${id}`, {headers:{
-                // Accept: 'application/json',
                 Authorization: `Bearer ${jwt}`
             }})
-            // const entryToReplace = projectWithId(datas.data.id)
-            // console.log('hello there', entryToReplace)
             projectList.value = projectList.value.map(element => {
                 if (element === projectWithId(datas.data.id)){
                     element = datas.data
                 }
                 return element
             })
-            // projectWithId(datas.data.id) = datas.data
-            // console.log(projectWithId(datas.data.id))
             console.log(projectList.value)
             return datas.data
         } catch (error) {

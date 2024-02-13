@@ -16,7 +16,10 @@ api.interceptors.response.use(
         return res
     },
     (err) => {
-        Promise.reject(err)
+        Promise.reject({
+            code: err.code, 
+            config: err.config
+        })
     }
 
 )

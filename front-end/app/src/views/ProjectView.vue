@@ -1,13 +1,11 @@
 <script setup>
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, onUpdated } from 'vue';
 import { useAuthStore } from '../store/authStore';
 import { useProjectStore } from '../store/projectStore';
 import CardProjectComponent from '../components/CardProjectComponent.vue'
 
 const { token } = useAuthStore()
 const { projectList, setProjectList } = useProjectStore()
-
-console.log(projectList)
 
 onBeforeMount(async () => {
     await setProjectList(token)
@@ -18,7 +16,7 @@ onBeforeMount(async () => {
     <div>
         <h3>Gestion de vos projets</h3>
         <hr>
-        <div class="card-bearer">
+        <div v-if="projectList.length" class="card-bearer">
             <CardProjectComponent 
                 v-for="p in projectList" 
                 :key="p.id"
@@ -27,8 +25,10 @@ onBeforeMount(async () => {
             />
             <div class="card-element add-project-element">
                 <a @click="() => console.log('do something')">Créez un nouveau projet</a>
-
             </div>
+        </div>
+        <div v-else>
+            <p class="p-10 text-orange-500">Une erreur est survenue, veuillez réessayer plus tard</p>
         </div>
     </div>
 </template>
