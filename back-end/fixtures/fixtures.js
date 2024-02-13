@@ -8,7 +8,7 @@ const userAccount = {login: "user", password: hashSync("user", 10)};
 const bullshit = faker.commerce
 const superBullshit = faker.company
 
-const randomIntInRange = (min, max) => Math.floor(Math.random() * (max - min) + min)
+const randomIntInRange = (min, max) => Math.round(Math.random() * (max - min) + min)
 
 const randomProjectList = () => {
     const projectList = []
