@@ -1,5 +1,5 @@
 <script setup>
-import { onBeforeMount, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import { useAuthStore } from '../store/authStore';
 import { useRoute, RouterLink } from 'vue-router';
 import { useProjectStore } from '../store/projectStore';
@@ -8,24 +8,26 @@ const { projectList, setProjectList, setTasksToProject, projectWithId } = usePro
 const { token } = useAuthStore()
 const route = useRoute()
 
-const tasks = ref(null)
 const project = ref({})
+
+const defaultTask = ref([])
+const currentTask = ref([])
+const doneTask = ref([])
 
 
 const projectId = +route.params.projectId
 
-
-
 onBeforeMount(async () => {
     if(!projectList.length) await setProjectList(token)
+    if(!projectList.Tasks) await setTasksToProject(projectId, token)
     project.value = projectWithId(projectId)
-    // if(project.value?.Tasks.length){
-    //     tasks.value = project.value.Tasks
-    // }
-    tasks.value = await setTasksToProject(projectId, token).tasks
-    console.log(project, tasks)
-
+    console.log(project.value)
 })
+// onMounted(() => {
+//     defaultTask.value = project.value.Tasks.filter(e => e.progress === 0)
+//     currentTask.value = project.value.Tasks.filter(e => e.progress === 1)
+//     doneTask.value = project.value.Tasks.filter(e => e.progress === 2)
+// })
 </script>
 
 <template>

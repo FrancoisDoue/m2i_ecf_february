@@ -25,7 +25,7 @@ export const useProjectStore = defineStore('project', () => {
     const setTasksToProject = async (id, jwt) => {
         try {
             const datas = await api.get(`/project/${id}`, {headers:{
-                Accept: 'application/json',
+                // Accept: 'application/json',
                 Authorization: `Bearer ${jwt}`
             }})
             // const entryToReplace = projectWithId(datas.data.id)

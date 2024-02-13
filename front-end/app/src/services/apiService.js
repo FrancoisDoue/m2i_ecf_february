@@ -1,6 +1,10 @@
 import axios from "axios"
 
-const api = axios.create({baseURL: "http://localhost:3000"})
+const api = axios.create({
+    baseURL: "http://localhost:3000",
+    timeout: 1000,
+    // headers: { Accept: "application/json" },
+});
 
 api.interceptors.request.use((config) => {
     console.log('config', config)
@@ -11,7 +15,10 @@ api.interceptors.response.use(
         console.log('response', res)
         return res
     },
-    (err) => Promise.reject(err)
+    (err) => {
+        Promise.reject(err)
+    }
+
 )
 
 export default api
