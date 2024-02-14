@@ -3,6 +3,7 @@ import { onBeforeMount, onBeforeUnmount, ref } from 'vue';
 import { useAuthStore } from '../store/authStore';
 import { useRoute, RouterLink } from 'vue-router';
 import { useProjectStore } from '../store/projectStore';
+import CardTaskComponent from '../components/CardTaskComponent.vue';
 
 const { projectList, setProjectList, setTasksToProject, projectWithId } = useProjectStore()
 const { token } = useAuthStore()
@@ -10,6 +11,8 @@ const route = useRoute()
 const projectId = +route.params.projectId
 
 const project = ref({})
+
+const colTitles = ['To do', 'Doing', 'Done']
 
 // onBeforeUnmount(() => console.log('unmount!'))
 
@@ -39,8 +42,12 @@ onBeforeMount(async () => {
         </div>
         <div class="tasks-bearer">
             <template v-if="project.Tasks">
-                <div v-for="i in 3" >
-                    <p v-for="task in project?.Tasks.filter(t => t.progress === i-1)">{{ task.title }}</p>
+                <div v-for="i, t in colTitles" >
+                    <CardTaskComponent
+                     v-for="task in project?.Tasks.filter(t => t.progress === i-1)"
+                     :index="task.id"
+                     :task="task"
+                    />
                 </div>
             </template>
             <div v-else>
@@ -61,7 +68,7 @@ h3{
 }
 .tasks-bearer{
     @apply flex flex-row min-h-full pt-2;
-    div {
+    > div {
         @apply w-1/3
     }
 }
