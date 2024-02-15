@@ -28,3 +28,19 @@
     hover:bg-blue-700 
     hover:cursor-pointer;
 }
+.edit-btn{
+    @apply 
+    text-white 
+    text-sm 
+    font-medium 
+    rounded 
+    flex 
+    flex-row-reverse 
+    bg-blue-500 
+    px-4 
+    py-1
+    focus:ring-4 
+    focus:ring-blue-300 
+    hover:bg-blue-700 
+    hover:cursor-pointer;
+}

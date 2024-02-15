@@ -42,9 +42,10 @@ onBeforeMount(async () => {
         </div>
         <div class="tasks-bearer">
             <template v-if="project.Tasks">
-                <div v-for="i, t in colTitles" >
+                <div v-for="t, i in colTitles" >
+                    <h5>{{ t }}</h5>
                     <CardTaskComponent
-                     v-for="task in project?.Tasks.filter(t => t.progress === i-1)"
+                     v-for="task in project?.Tasks.filter(t => t.progress === i)"
                      :index="task.id"
                      :task="task"
                     />
@@ -69,7 +70,7 @@ h3{
 .tasks-bearer{
     @apply flex flex-row min-h-full pt-2;
     > div {
-        @apply w-1/3
+        @apply w-1/3 mx-2
     }
 }
 
