@@ -48,6 +48,7 @@ onBeforeMount(async () => {
                      v-for="task in project?.Tasks.filter(t => t.progress === i)"
                      :index="task.id"
                      :task="task"
+                     :projectId="+route.params.projectId"
                     />
                 </div>
             </template>

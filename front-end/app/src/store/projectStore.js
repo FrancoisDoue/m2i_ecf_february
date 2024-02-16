@@ -1,9 +1,12 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "../services/apiService";
+import { useAuthStore } from "./authStore";
 
 
 export const useProjectStore = defineStore('project', () => {
+
+    const { token } = useAuthStore()
 
     const projectList = ref([])
 
