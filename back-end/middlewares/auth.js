@@ -37,6 +37,7 @@ export const tokenVerify = (req, res, next) => {
         req.userId = jwt.verify(token, process.env.JWT_SECRET).id
         return next()
     } catch (e) {
+        console.log(e)
         res.status(401).json({ message: "You must be connected to access this route" });
     }
 }

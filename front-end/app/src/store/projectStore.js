@@ -1,20 +1,28 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "../services/apiService";
-import { useAuthStore } from "./authStore";
+// import { useAuthStore } from "./authStore";
 
 
 export const useProjectStore = defineStore('project', () => {
 
-    const { token } = useAuthStore()
+    // const { token } = useAuthStore()
 
     const projectList = ref([])
-
+/**
+ * 
+ * @param {Number|string} id 
+ * @returns {{}}
+ */
     const projectWithId = (id) => {
         if(projectList.value.length) return projectList.value.find(p => p.id == id)
         return {}
     }
-
+/**
+ * 
+ * @param {string} jwt 
+ * @returns 
+ */
     const setProjectList = async (jwt) => {
         if(!projectList.value.length)
             try {

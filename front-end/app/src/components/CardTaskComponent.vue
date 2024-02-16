@@ -22,7 +22,7 @@
         try{
             const deleteStatus = api.delete(
                 `/project/${props.projectId}/${props.task.id}`, 
-                {headers: {Authorization: `Bearer = ${token}`}})
+                {headers: {Authorization: `Bearer ${token}`}})
             console.log(deleteStatus)
             if (deleteStatus) console.log('next action')
         }catch(e) {
