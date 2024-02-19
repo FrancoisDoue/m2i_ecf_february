@@ -10,6 +10,7 @@ const { token } = useAuthStore()
 const route = useRoute()
 const projectId = +route.params.projectId
 
+console.log(projectWithId(projectId))
 const project = ref({})
 
 const colTitles = ['To do', 'Doing', 'Done']

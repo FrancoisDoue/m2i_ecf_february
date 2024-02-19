@@ -1,28 +1,21 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
 import api from "../services/apiService";
-// import { useAuthStore } from "./authStore";
+import { useAuthStore } from "./authStore";
 
 
 export const useProjectStore = defineStore('project', () => {
 
-    // const { token } = useAuthStore()
+    const { token } = useAuthStore()
+    console.log(token)
 
     const projectList = ref([])
-/**
- * 
- * @param {Number|string} id 
- * @returns {{}}
- */
+
     const projectWithId = (id) => {
         if(projectList.value.length) return projectList.value.find(p => p.id == id)
         return {}
     }
-/**
- * 
- * @param {string} jwt 
- * @returns 
- */
+
     const setProjectList = async (jwt) => {
         if(!projectList.value.length)
             try {
@@ -34,6 +27,22 @@ export const useProjectStore = defineStore('project', () => {
             } catch (e) {
                 return projectList.value = []
             }
+    }
+
+    const removeTask = async (projectId, taskId, jwt) => {
+        console.log(`/project/${projectId}/${taskId}`)
+        console.log(token)
+        try{
+            const deleteStatus = await api.delete(
+                `/project/${projectId}/${taskId}`, 
+                {headers: {Authorization: `Bearer ${jwt}`}})
+            if (deleteStatus){
+                console.log('next action')
+                await setTasksToProject(projectId, jwt)
+            } 
+        }catch(e) {
+            console.log(e)
+        }
     }
 
     const setTasksToProject = async (id, jwt) => {
@@ -65,6 +74,7 @@ export const useProjectStore = defineStore('project', () => {
         projectWithId, 
         setProjectList, 
         unsetProjectList, 
-        setTasksToProject
+        setTasksToProject,
+        removeTask
     }
 })
